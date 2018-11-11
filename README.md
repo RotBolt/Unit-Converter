@@ -1,4 +1,4 @@
-# flutter_udacity_project
+# Unit Converter
 
 A new Flutter project.
 
