@@ -4,7 +4,13 @@ import 'unit.dart';
 
 final _backgroundColor = Colors.green[100];
 
-class CategoryRoute extends StatelessWidget {
+class CategoryRoute extends StatefulWidget {
+  
+  @override
+  _CategoryRouteState createState() => _CategoryRouteState(); 
+}
+
+class _CategoryRouteState extends State<CategoryRoute>{
   static const _categoriesNames = [
     "Length",
     "Area",
@@ -26,7 +32,8 @@ class CategoryRoute extends StatelessWidget {
     Colors.purpleAccent,
     Colors.red,
   ];
-  ListView _buildCategories(List<Widget> categories) {
+
+   ListView _buildCategories(List<Widget> categories) {
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) => categories[index],
       itemCount: categories.length,
@@ -42,7 +49,6 @@ class CategoryRoute extends StatelessWidget {
       );
     });
   }
-
   @override
   Widget build(BuildContext context) {
     final categories = <Category>[];
@@ -76,4 +82,5 @@ class CategoryRoute extends StatelessWidget {
       body: listView,
     );
   }
+
 }
