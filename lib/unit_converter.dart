@@ -1,33 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:unit_converter/category.dart';
 import 'unit.dart';
 import 'package:meta/meta.dart';
 
 const _padding = EdgeInsets.all(16.0);
 
-class ConverterRoute extends StatefulWidget {
-  final String title;
-  final Color color;
-  final List<Unit> units;
+class UnitConverter extends StatefulWidget {
+  final Category category;
 
-  ConverterRoute(
-      {@required this.title, @required this.color, @required this.units})
-      : assert(title != null),
-        assert(color != null),
-        assert(units != null);
+  UnitConverter({@required this.category}) : assert(category != null);
 
   @override
-  _ConverterRouteState createState() =>
-      _ConverterRouteState(color: color, title: title, units: units);
+  _UnitConverterState createState() =>
+      _UnitConverterState(category: category);
 }
 
-class _ConverterRouteState extends State<ConverterRoute> {
+class _UnitConverterState extends State<UnitConverter> {
   Unit _fromValue;
   Unit _toValue;
   double _inputValue;
   String _convertedValue = '';
-  final String title;
-  final Color color;
-  final List<Unit> units;
+  final Category category;
   bool _showValidationError = false;
   List<DropdownMenuItem> _unitMenuItems;
 
@@ -38,11 +31,7 @@ class _ConverterRouteState extends State<ConverterRoute> {
     _setDefaults();
   }
 
-  _ConverterRouteState(
-      {@required this.title, @required this.color, @required this.units})
-      : assert(title != null),
-        assert(color != null),
-        assert(units != null);
+  _UnitConverterState({@required this.category}):assert(category!=null);
 
   String _format(double conversion) {
     var outputNum = conversion.toStringAsPrecision(7);
@@ -90,13 +79,13 @@ class _ConverterRouteState extends State<ConverterRoute> {
 
   void _setDefaults() {
     setState(() {
-      _fromValue = widget.units[0];
-      _toValue = widget.units[1];
+      _fromValue = widget.category.units[0];
+      _toValue = widget.category.units[1];
     });
   }
 
   Unit _getUnit(String unitName) {
-    return widget.units.firstWhere(
+    return widget.category.units.firstWhere(
       (Unit unit) {
         return unit.name == unitName;
       },
@@ -126,7 +115,7 @@ class _ConverterRouteState extends State<ConverterRoute> {
 
   void _createDropdownMenuItems() {
     var newItems = <DropdownMenuItem>[];
-    for (var unit in widget.units) {
+    for (var unit in widget.category.units) {
       newItems.add(DropdownMenuItem(
         value: unit.name,
         child: Container(
@@ -186,7 +175,6 @@ class _ConverterRouteState extends State<ConverterRoute> {
           ),
           _createDropDown(_fromValue.name, _updateFromConversion)
         ],
-    
       ),
     );
 
@@ -225,10 +213,10 @@ class _ConverterRouteState extends State<ConverterRoute> {
     final appBar = AppBar(
       elevation: 1.0,
       title: Text(
-        title,
+        category.name,
         style: Theme.of(context).textTheme.display1,
       ),
-      backgroundColor: color,
+      backgroundColor: category.color,
       centerTitle: true,
     );
     return Scaffold(
