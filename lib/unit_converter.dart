@@ -210,17 +210,7 @@ class _UnitConverterState extends State<UnitConverter> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[inputBox, arrows, outputBox],
     );
-    final appBar = AppBar(
-      elevation: 1.0,
-      title: Text(
-        category.name,
-        style: Theme.of(context).textTheme.display1,
-      ),
-      backgroundColor: category.color,
-      centerTitle: true,
-    );
     return Scaffold(
-      appBar: appBar,
       body: Padding(
         padding: _padding,
         child: converter,
