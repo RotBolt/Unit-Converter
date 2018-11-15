@@ -11,8 +11,7 @@ class UnitConverter extends StatefulWidget {
   UnitConverter({@required this.category}) : assert(category != null);
 
   @override
-  _UnitConverterState createState() =>
-      _UnitConverterState(category: category);
+  _UnitConverterState createState() => _UnitConverterState(category: category);
 }
 
 class _UnitConverterState extends State<UnitConverter> {
@@ -31,7 +30,7 @@ class _UnitConverterState extends State<UnitConverter> {
     _setDefaults();
   }
 
-  _UnitConverterState({@required this.category}):assert(category!=null);
+  _UnitConverterState({@required this.category}) : assert(category != null);
 
   String _format(double conversion) {
     var outputNum = conversion.toStringAsPrecision(7);
@@ -213,7 +212,24 @@ class _UnitConverterState extends State<UnitConverter> {
     return Scaffold(
       body: Padding(
         padding: _padding,
-        child: converter,
+        child: OrientationBuilder(
+          builder: (BuildContext context, Orientation orientation) {
+            if (orientation == Orientation.portrait) {
+              return SingleChildScrollView(
+                child: converter,
+              );
+            } else {
+              return SingleChildScrollView(
+                child: Center(
+                  child: Container(
+                    width: 450.0,
+                    child: converter,
+                  ),
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }
