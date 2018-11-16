@@ -4,8 +4,8 @@ import 'package:unit_converter/category_tile.dart';
 import 'package:unit_converter/unit_converter.dart';
 import 'category.dart';
 import 'unit.dart';
-
-final _backgroundColor = Colors.green[100];
+import 'dart:convert';
+import 'dart:async';
 
 class CategoryRoute extends StatefulWidget {
   @override
@@ -16,17 +16,7 @@ class _CategoryRouteState extends State<CategoryRoute> {
   final _categories = <Category>[];
   Category _defaultCategory;
   Category _currentCategory;
-  static const _categoriesNames = [
-    "Length",
-    "Area",
-    "Volume",
-    "Mass",
-    "Time",
-    "Digital Storage",
-    "Energy",
-    "Currency"
-  ];
-
+ 
   static const _baseColors = <ColorSwatch>[
     ColorSwatch(0xFF6AB7A8, {
       'highlight': Color(0xFF6AB7A8),
@@ -63,21 +53,56 @@ class _CategoryRouteState extends State<CategoryRoute> {
     }),
   ];
 
+  static const _icons = <String>[
+    'assets/icons/length.png',
+    'assets/icons/area.png',
+    'assets/icons/volume.png',
+    'assets/icons/mass.png',
+    'assets/icons/time.png',
+    'assets/icons/digital_storage.png',
+    'assets/icons/power.png',
+    'assets/icons/currency.png',
+  ];
+
   @override
-  void initState() {
-    super.initState();
-    for (int i = 0; i < _categoriesNames.length; i++) {
-      var category = Category(
-        color: _baseColors[i],
-        name: _categoriesNames[i],
-        iconLocation: Icons.cake,
-        units: _retrieveUnits(_categoriesNames[i]),
-      );
-      if (i == 0) {
-        _defaultCategory = category;
-      }
-      _categories.add(category);
+  Future<void> didChangeDependencies() async {
+    super.didChangeDependencies();
+
+    // We have static unit conversions located in our
+
+    // assets/data/regular_units.json
+
+    if (_categories.isEmpty) {
+      await _retrieveLocalCategories();
     }
+  }
+
+  Future<void> _retrieveLocalCategories() async {
+    final regularUnitsJson = DefaultAssetBundle.of(context)
+        .loadString('assets/data/regular_units.json');
+    final unitsData = JsonDecoder().convert(await regularUnitsJson);
+    if (unitsData is! Map) {
+      throw ("Date retreived from API is not Map");
+    }
+    var categoryIndex = 0;
+    unitsData.keys.forEach((key) {
+      final List<Unit> units = unitsData[key]
+          .map<Unit>((dynamic data) => Unit.fromJson(data))
+          .toList();
+
+      var category = Category(
+          name: key,
+          units: units,
+          color: _baseColors[categoryIndex],
+          iconLocation: _icons[categoryIndex]);
+      setState(() {
+        if (categoryIndex == 0) {
+          _defaultCategory = category;
+        }
+        _categories.add(category);
+      });
+      categoryIndex++;
+    });
   }
 
   void _onCategoryTap(Category category) {
@@ -87,38 +112,40 @@ class _CategoryRouteState extends State<CategoryRoute> {
   }
 
   Widget _buildCategories(Orientation deviceOrientation) {
-    if(deviceOrientation==Orientation.portrait){
-    return ListView.builder(
-      itemBuilder: (BuildContext context, int index) => CategoryTile(
-            category: _categories[index],
-            onTap: _onCategoryTap,
-          ),
-      itemCount: _categories.length,
-    );
-  }
-  else{
-    return GridView.count(
+    if (deviceOrientation == Orientation.portrait) {
+      return ListView.builder(
+        itemBuilder: (BuildContext context, int index) => CategoryTile(
+              category: _categories[index],
+              onTap: _onCategoryTap,
+            ),
+        itemCount: _categories.length,
+      );
+    } else {
+      return GridView.count(
         crossAxisCount: 2,
         childAspectRatio: 3.0,
-        children: _categories.map((Category category){
-            return CategoryTile(
-                category: category,
-                onTap: _onCategoryTap,
-            );
+        children: _categories.map((Category category) {
+          return CategoryTile(
+            category: category,
+            onTap: _onCategoryTap,
+          );
         }).toList(),
-    );
-  }
-  }
-
-  List<Unit> _retrieveUnits(String categoryName) {
-    return List.generate(10, (int i) {
-      i += 1;
-      return Unit(name: '$categoryName Unit $i', conversion: i.toDouble());
-    });
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_categories.isEmpty) {
+      return Center(
+        child: Container(
+          height: 180.0,
+          width: 180.0,
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     final listView = Padding(
       padding: EdgeInsets.only(
         left: 8.0,

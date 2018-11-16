@@ -22,12 +22,25 @@ class _UnitConverterState extends State<UnitConverter> {
   final Category category;
   bool _showValidationError = false;
   List<DropdownMenuItem> _unitMenuItems;
+  final _inputKey = GlobalKey(debugLabel: 'inputText');
 
   @override
   void initState() {
     super.initState();
     _createDropdownMenuItems();
     _setDefaults();
+  }
+
+  @override
+  void didUpdateWidget(UnitConverter old) {
+    super.didUpdateWidget(old);
+
+    // We update our [DropdownMenuItem] units when we switch [Categories].
+
+    if (old.category != widget.category) {
+      _createDropdownMenuItems();
+      _setDefaults();
+    }
   }
 
   _UnitConverterState({@required this.category}) : assert(category != null);
@@ -161,14 +174,15 @@ class _UnitConverterState extends State<UnitConverter> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           TextField(
+            key: _inputKey,
             style: Theme.of(context).textTheme.display1,
             decoration: InputDecoration(
-                labelStyle: Theme.of(context).textTheme.display1,
-                labelText: "Input",
-                errorText:
-                    _showValidationError ? "Invalid Number Entered" : null,
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(0.0))),
+              labelStyle: Theme.of(context).textTheme.display1,
+              labelText: "Input",
+              errorText: _showValidationError ? "Invalid Number Entered" : null,
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
+            ),
             keyboardType: TextInputType.number,
             onChanged: _updateInputValue,
           ),
@@ -198,7 +212,7 @@ class _UnitConverterState extends State<UnitConverter> {
                 labelText: "Output",
                 labelStyle: Theme.of(context).textTheme.display1,
                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(0.0))),
+                    borderRadius: BorderRadius.circular(15.0))),
           ),
           _createDropDown(_toValue.name, _updateToConversion),
         ],

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:unit_converter/unit.dart';
 
 class Category {
-  final IconData iconLocation;
+  final String iconLocation;
   final String name;
   final ColorSwatch color;
   final List<Unit> units;
