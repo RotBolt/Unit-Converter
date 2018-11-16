@@ -40,7 +40,7 @@ class _UnitConverterState extends State<UnitConverter> {
     if (old.category != widget.category) {
       _createDropdownMenuItems();
       _setDefaults();
-      _updateConversion();
+      if (_inputValue != null) _updateConversion();
     }
   }
 
