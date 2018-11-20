@@ -11,7 +11,6 @@ class CategoryTile extends StatelessWidget {
 
   const CategoryTile({Key key, this.category, this.onTap})
       : assert(category != null),
-        assert(onTap != null),
         super(key: key);
 
   // Used Earlier when no backdrop
@@ -32,23 +31,24 @@ class CategoryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-        color: Colors.transparent,
+        color: onTap == null
+            ? Color.fromRGBO(50, 50, 50, 0.2)
+            : Colors.transparent,
         child: Container(
           height: _rowHeight,
           child: InkWell(
             borderRadius: _borderRadius,
             highlightColor: category.color['highlight'],
             splashColor: category.color['splash'],
-            onTap:()=> onTap(category),
+            onTap: onTap == null ? null : () => onTap(category),
             child: Padding(
               padding: EdgeInsets.all(8.0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child:Image.asset(category.iconLocation)
-                  ),
+                      padding: EdgeInsets.all(16.0),
+                      child: Image.asset(category.iconLocation)),
                   Center(
                     child: Text(
                       category.name,

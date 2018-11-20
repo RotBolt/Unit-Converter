@@ -149,6 +149,7 @@ class _CategoryRouteState extends State<CategoryRoute> {
 
   void _onCategoryTap(Category category) {
     setState(() {
+      print("ouch i was tapped");
       _currentCategory = category;
     });
   }
@@ -156,10 +157,16 @@ class _CategoryRouteState extends State<CategoryRoute> {
   Widget _buildCategories(Orientation deviceOrientation) {
     if (deviceOrientation == Orientation.portrait) {
       return ListView.builder(
-        itemBuilder: (BuildContext context, int index) => CategoryTile(
-              category: _categories[index],
-              onTap: _onCategoryTap,
-            ),
+        itemBuilder: (BuildContext context, int index) {
+          var _category = _categories[index];
+          return CategoryTile(
+            category: _category,
+            onTap: _category.name == apiCurrencyCategory['name'] &&
+                    _category.units.isEmpty
+                ? null
+                : _onCategoryTap,
+          );
+        },
         itemCount: _categories.length,
       );
     } else {
