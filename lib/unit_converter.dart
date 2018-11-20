@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:unit_converter/category.dart';
 import 'unit.dart';
 import 'package:meta/meta.dart';
+import 'api.dart';
 
 const _padding = EdgeInsets.all(16.0);
 
@@ -65,11 +66,24 @@ class _UnitConverterState extends State<UnitConverter> {
     return outputNum;
   }
 
-  void _updateConversion() {
-    setState(() {
-      _convertedValue =
-          _format(_inputValue * (_toValue.conversion / _fromValue.conversion));
-    });
+  Future<void> _updateConversion() async {
+    // API has a handy convert function, so we use that for
+    // the Currency [Category]
+
+    if (widget.category.name == apiCurrencyCategory['name']) {
+      final api = Api();
+      final conversion = await api.convert(apiCurrencyCategory['route'],
+          _inputValue.toString(), _fromValue.name, _toValue.name);
+      setState(() {
+        _convertedValue = _format(conversion);
+      });
+    } else {
+      // For the static units, we do the conversion ourselves
+      setState(() {
+        _convertedValue = _format(
+            _inputValue * (_toValue.conversion / _fromValue.conversion));
+      });
+    }
   }
 
   void _updateInputValue(String input) {
