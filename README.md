@@ -1,11 +1,10 @@
 # Unit Converter
 
 A awesome Flutter project.
-
-
+ 
 ## Working 
 
-![unit_converter_gif](https://user-images.githubusercontent.com/24780524/48599951-ef594400-e98f-11e8-81ce-09b5ad42da07.gif)
+<img src="https://user-images.githubusercontent.com/24780524/48599951-ef594400-e98f-11e8-81ce-09b5ad42da07.gif" width="240" />
 
 ## Getting Started
 
