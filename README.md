@@ -4,7 +4,7 @@ A awesome Flutter project.
  
 ## Working 
 
-<img src="https://user-images.githubusercontent.com/24780524/48599951-ef594400-e98f-11e8-81ce-09b5ad42da07.gif" width="240" />
+<img src="https://user-images.githubusercontent.com/24780524/49364063-5190a380-f709-11e8-91ce-c1d8c682d52e.gif" width="240" />
 
 ## Getting Started
 
